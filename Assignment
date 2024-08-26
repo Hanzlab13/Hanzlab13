@@ -1,1 +1,91 @@
+class Car:
+    def __init__(self, model, price, rental_price):
+        self.model = model
+        self.price = price
+        self.rental_price = rental_price
+        self.available = True
+
+    def sell(self):
+        if self.available:
+            print(f"{self.model} has been sold for ${self.price}!")
+            self.available = False
+        else:
+            print(f"Sorry, {self.model} is not available for sale.")
+
+    def rent(self):
+        if self.available:
+            print(f"{self.model} has been rented for ${self.rental_price} per day!")
+            self.available = False
+        else:
+            print(f"Sorry, {self.model} is not available for rent.")
+
+    def return_car(self):
+        if not self.available:
+            print(f"{self.model} has been returned.")
+            self.available = True
+        else:
+            print(f"{self.model} is already available.")
+
+class Showroom:
+    def __init__(self):
+        self.cars = []
+
+    def add_car(self, car):
+        self.cars.append(car)
+
+    def display_cars(self):
+        print("\nAvailable Cars:")
+        for index, car in enumerate(self.cars):
+            status = "Available" if car.available else "Not Available"
+            print(f"{index + 1}. Model: {car.model}, Price: ${car.price}, Rental Price: ${car.rental_price}/day, Status: {status}")
+
+    def choose_car(self):
+        self.display_cars()
+        choice = int(input("Enter the number of the car you want: ")) - 1
+        if choice < 0 or choice >= len(self.cars):
+            print("Invalid choice. Please try again.")
+            return None
+        return self.cars[choice]
+
+    def transaction(self):
+        car = self.choose_car()
+        if car is None:
+            return
+
+        action = input(f"Do you want to 'rent' or 'buy' the {car.model}? ").strip().lower()
+
+        if action == "buy":
+            car.sell()
+        elif action == "rent":
+            car.rent()
+        else:
+            print("Invalid action. Please choose 'rent' or 'buy'.")
+
+car1 = Car("Tesla Model S", 79999, 500)
+car2 = Car("BMW X5", 60000, 300)
+car3 = Car("Audi Q7", 65000, 350)
+car4 = Car("Mercedes-Benz C-Class", 55000, 250)
+car5 = Car("Ford Mustang", 45000, 200)
+
+showroom = Showroom()
+showroom.add_car(car1)
+showroom.add_car(car2)
+showroom.add_car(car3)
+showroom.add_car(car4)
+showroom.add_car(car5)
+
+while True:
+    print("\nWelcome to the Car Showroom!")
+    showroom.transaction()
+    
+    another = input("Do you want to make another transaction? (yes/no): ").strip().lower()
+    if another != "yes":
+        break
+
+  
+    return_option = input("Do you want to return a rented car? (yes/no): ").strip().lower()
+    if return_option == "yes":
+        car = showroom.choose_car()
+        if car and not car.available:
+            car.return_car()
 
